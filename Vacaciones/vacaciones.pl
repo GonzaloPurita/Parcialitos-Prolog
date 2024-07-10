@@ -10,8 +10,9 @@ destino(alf, elBolson).
 destino(nico, marDelPlata).
 destino(vale, calafate).
 destino(vale, elBolson).
-destino(martu, Destino):- destinoMartu(Destino).
-destino(juan, Destino):- destinoJuan(Destino).
+destino(martu, Destino):- destino(nico, Destino).
+destino(martu, Destino):- destino(alf, Destino).
+%destino(juan, Destino):- destinoJuan(Destino).
 
 persona(dodain).
 persona(alf).
@@ -20,15 +21,10 @@ persona(vale).
 persona(martu).
 persona(juan).
 
-destinoJuan(Destino):-
+/*destinoJuan(Destino):-
     Destino = villaGesell.
 destinoJuan(Destino):-
-    Destino = federacion.
-
-destinoMartu(Destino):-
-    destino(nico, Destino).
-destinoMartu(Destino):-
-    destino(alf, Destino).
+    Destino = federacion.*/
 
 atracciones(esquel, parque(losAlerces)).
 atracciones(esquel, excursion(trochita)).
