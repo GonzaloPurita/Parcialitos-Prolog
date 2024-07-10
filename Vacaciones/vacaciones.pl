@@ -64,12 +64,12 @@ vacacionesGasoleras(Persona):-
     persona(Persona),
     forall(destino(Persona, Destino), (destino(Persona, Destino), costoDeVida(Destino, Costo), Costo < 160)).
 
-itineracios(Persona, ListaDestinos):-
-    cantidadViajes(Persona, Cantidad),
-    length(ListaDestinos, Cantidad),
-    forall(destino(Persona, Destino), member(Destino, ListaDestinos)).
-    
-    
-cantidadViajes(Persona, Cantidad):-
+itinerarios(Persona, ListaDestinos):-
     findall(Destino, destino(Persona, Destino), Destinos),
-    length(Destinos, Cantidad).
+    combinar(Destinos, ListaDestinos).
+
+combinar([], []).
+combinar([Destino|Destinos], [Destino|ListaDestinos]):-
+    combinar(Destinos, ListaDestinos).
+combinar([_|Destinos], ListaDestinos):-
+    combinar(Destinos, ListaDestinos).
