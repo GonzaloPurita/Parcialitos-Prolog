@@ -47,7 +47,9 @@ atraccionCopada(excursion(Nombre)):- atom_length(Nombre, Cant), Cant > 7.
 noSeCruzaron(Persona1, Persona2):-
     persona(Persona1),
     persona(Persona2),
-    forall(persona(_), not((destino(Persona1, Destino), destino(Persona2, Destino)))).
+    Persona1 \= Persona2,
+    not((destino(Persona1, Destino), destino(Persona2, Destino))).
+    %forall(persona(_), not((destino(Persona1, Destino), destino(Persona2, Destino)))).
 
 costoDeVida(sarmiento, 100).
 costoDeVida(esquel, 150).
@@ -62,14 +64,26 @@ costoDeVida(marDelPlata, 140).
 
 vacacionesGasoleras(Persona):-
     persona(Persona),
-    forall(destino(Persona, Destino), (destino(Persona, Destino), costoDeVida(Destino, Costo), Costo < 160)).
+    forall(destino(Persona, Destino), (costoDeVida(Destino, Costo), Costo < 160)).
 
 itinerarios(Persona, ListaDestinos):-
     findall(Destino, destino(Persona, Destino), Destinos),
-    combinar(Destinos, ListaDestinos).
+    permutar(Destinos, ListaDestinos).
 
+permutar([], []).
+permutar(Lista, [Elemento|Permutacion]):-
+    seleccionar(Elemento, Lista, Resto), % Selecciona un elemento de la lista.
+    permutar(Resto, Permutacion).        % Permuta recursivamente el resto.
+
+% seleccionar(+Elemento, +Lista, -Resto)
+% Selecciona un elemento de la lista y devuelve la lista restante sin ese elemento.
+seleccionar(Elemento, [Elemento|Resto], Resto). % Caso: El elemento está al inicio.
+seleccionar(Elemento, [Cabeza|Cola], [Cabeza|Resto]):-
+    seleccionar(Elemento, Cola, Resto). % Busca en la cola.
+/*
 combinar([], []).
 combinar([Destino|Destinos], [Destino|ListaDestinos]):-
     combinar(Destinos, ListaDestinos).
 combinar([_|Destinos], ListaDestinos):-
     combinar(Destinos, ListaDestinos).
+*/
