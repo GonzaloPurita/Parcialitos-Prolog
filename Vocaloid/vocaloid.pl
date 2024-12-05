@@ -31,12 +31,14 @@ masDeUnaCancion(Vocaloid):-
 % no existe cancion del cantante que dure mas de 4 min
 vocaloidAcelerado(Vocaloid):-
     cantante(Vocaloid),
-    not((vocaloid(Vocaloid, _, _), (vocaloid(Vocaloid, _, Tiempo), Tiempo > 4))).
+    not((vocaloid(Vocaloid, _, Tiempo), Tiempo > 4)).
 
 % CONCIERTOS
 % gigante(cantCanciones, tiempo minimo de duracion de canciones)
 % mediano(tiempo maximo de duracion de canciones)
 % peque(tiempo minimo de una cancion por lo menos)
+
+%concierto(nombre, pais, fama, tipo).
 concierto(mikuExpo, usa, 2000, gigante(2, 6)).
 concierto(magicalMirai, japon, 3000, gigante(3, 10)).
 concierto(vocalektVisions, usa, 1000, mediano(9)).
@@ -51,12 +53,14 @@ nombreConcierto(miku).
 
 % Punto 2: Puede participar en un concierto si cumple con el requisito del tipo de concierto
 %puedeParticipar(hatsuneMiku, _).
+puedeParticipar(hatsuneMiku, Concierto):-
+    nombreConcierto(Concierto).
 puedeParticipar(Vocaloid, Concierto):-
     cantante(Vocaloid),
+    Vocaloid \= hatsuneMiku,
     concierto(Concierto, _, _, Tipo),
-    distinct(Tipo, cumpleTipo(Vocaloid, Tipo)).
+    cumpleTipo(Vocaloid, Tipo).
 
-cumpleTipo(hatsuneMiku, _).
 cumpleTipo(Vocaloid, gigante(Cant, TiempoMinimo)):-
     cantidadCancionesMinimas(Cant, Vocaloid),
     tiempoMinimosCanciones(Vocaloid, TiempoMinimo).
@@ -68,11 +72,10 @@ cumpleTipo(Vocaloid, peque(TiempoMinimo)):-
     Tiempo > TiempoMinimo.
 
 tiempoMinimosCanciones(Vocaloid, TiempoMinimo):-
-    forall(vocaloid(Vocaloid, _, _), (vocaloid(Vocaloid, _, Tiempo), Tiempo >= TiempoMinimo)).
+    forall(vocaloid(Vocaloid, _, Tiempo), Tiempo >= TiempoMinimo).
 
 cantidadCancionesMinimas(Cant, Vocaloid):-
-    findall(Cancion, vocaloid(Vocaloid, Cancion, _), Canciones),
-    length(Canciones, Cantidad),
+    cantidadDeCanciones(Vocaloid, Cantidad),
     Cantidad >= Cant.
 
 % Punto 3: vocaloid famosa, es la que tenga el mayor nivel de fama
@@ -91,21 +94,21 @@ puntosConciertos(Vocaloid, Puntos):-
     findall(Punto, (puedeParticipar(Vocaloid, Concierto), concierto(Concierto, _, Punto, _)), Puntajes),
     sum_list(Puntajes, Puntos).
 
-cantidadDeCanciones(Vocaloid, Cant):-
+cantidadDeCanciones(Vocaloid, Cantidad):-
     findall(Cancion, vocaloid(Vocaloid, Cancion, _), Canciones),
-    length(Canciones, Cant).
+    length(Canciones, Cantidad).
 
 % Punto 4
-conoce(megurineLuka, hatsuneMiku).
-conoce(hatsuneMiku, gumi).
-conoce(megurineLuka, gumi).
-conoce(gumi, seeU).
-conoce(seeU, kaito).
+conoceA(megurineLuka, hatsuneMiku).
+conoceA(hatsuneMiku, gumi).
+conoceA(megurineLuka, gumi).
+conoceA(gumi, seeU).
+conoceA(seeU, kaito).
 
 contactoDirectoIndirecto(Persona, Conocido):-
-    conoce(Persona, Conocido).
+    conoceA(Persona, Conocido).
 contactoDirectoIndirecto(Persona, Conocido):-
-    conoce(ConocidoIntermedio, Conocido),
+    conoceA(ConocidoIntermedio, Conocido),
     contactoDirectoIndirecto(Persona, ConocidoIntermedio).
 
 % un vocaloid es el unico q participa en un concierto si ninguno de sus conocidos participa en el concierto
