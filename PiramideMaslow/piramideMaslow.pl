@@ -137,7 +137,11 @@ condicionMaslow(Persona, NecesidadMayor):-
 
 tieneAlgunaNecesidadInferior(Persona, NecesidadMayor):-
     necesidad(NecesidadMayor, JerarquiaMayor),
-    forall((queNecesita(Persona, Necesidades), necesidad(Necesidades, Jerarquia), Necesidades \= NecesidadMayor), (menorJerarquia(Jerarquia, JerarquiaMayor))).
+    queNecesita(Persona, Necesidad),
+    necesidad(Necesidad, Jerarquia),
+    menorJerarquia(Jerarquia, JerarquiaMayor).
+    %necesidad(NecesidadMayor, JerarquiaMayor),
+    %forall((queNecesita(Persona, Necesidades), necesidad(Necesidades, Jerarquia), Necesidades \= NecesidadMayor), (menorJerarquia(Jerarquia, JerarquiaMayor))).
 
 unicaNecesidad(Persona, NecesidadMayor):-
     not((queNecesita(Persona, Necesidad), Necesidad \= NecesidadMayor)).
@@ -149,5 +153,13 @@ teoriaMaslowVarias(ListaPersonas):- %falta hacerla inversible
     %member(Persona, ListaPersonas),
     forall(member(Persona, ListaPersonas), teoriaMaslowParticular(Persona)).
 
-% c) falta hacer
+% c)
+teoriaMaslowMayoria(ListaPersonas):-
+    personasQueCumplenLaTeoria(ListaPersonas, PersonasQueCumplen),
+    length(PersonasQueCumplen, CantidadCumplen),
+    length(ListaPersonas, CantidadPersonas),
+    CantidadCumplen >= CantidadPersonas / 2.
+
+personasQueCumplenLaTeoria(ListaPersonas, PersonasQueCumplen):-
+    findall(Persona, teoriaMaslowMayoria(Persona), PersonasQueCumplen).
 
