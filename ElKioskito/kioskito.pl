@@ -25,7 +25,7 @@ quienAtiende(Persona, Dia, Hora):-
 % Punto 3: No existe persona que atienda en el mismo horario que esta persona
 atiendeSola(Persona, Dia, HoraDeAtencion):-
     quienAtiende(Persona, Dia, HoraDeAtencion),
-    not((quienAtiende(Personas, _, _), (quienAtiende(Personas, Dia, HoraDeAtencion), Personas \= Persona))).
+    not(((quienAtiende(Personas, _, _), Personas \= Persona), quienAtiende(Personas, Dia, HoraDeAtencion))).
 
 % Punto 4: todas las posibilidades de quien podria estar atendiendo en algun momento del dia
 posibilidadesAtencion(Dia, ListaPersonas):-
