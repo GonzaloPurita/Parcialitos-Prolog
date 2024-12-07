@@ -9,10 +9,15 @@ herramientas(egon, trapeador).
 herramientas(peter, trapeador).
 herramientas(winston, varitaDeNeutrones).
 
+herramientas(gonza, escoba).
+herramientas(gonza, trapeador).
+herramientas(gonza, plumero).
+
 persona(egon).
 persona(peter).
 persona(winston).
 persona(ray).
+persona(gonza).
 
 % Tiene herramienta requerida
 tieneHerramienta(Integrante, aspiradora(PotenciaRequerida)):-
@@ -22,7 +27,7 @@ tieneHerramienta(Integrante, Herramienta):-
     herramientas(Integrante, Herramienta).
 
 puedeHacerTarea(Persona, _):-
-    herramientas(Persona, varitaDeNeutrones).
+    tieneHerramienta(Persona, varitaDeNeutrones).
 puedeHacerTarea(Persona, Tarea):-
     persona(Persona),
     herramientasRequeridas(Tarea, ListaDeHerramientas),
@@ -73,14 +78,10 @@ puedeHacerPedido(Integrante, Cliente):-
 
 estaDispuestoAHacerlo(ray, Cliente):-
     not(tareaPedida(limpiarTecho, Cliente, _)).
-
 estaDispuestoAHacerlo(winston, Cliente):-
     cobroCliente(Cliente, PrecioACobrar),
     PrecioACobrar > 500.
-
-estaDispuestoAHacerlo(peter, Cliente):-
-    tareaPedida(_, Cliente, _).
-
+estaDispuestoAHacerlo(peter, _).
 estaDispuestoAHacerlo(egor, Cliente):-
     forall(tareaPedida(Tarea, Cliente, _), not(tareaCompleja(Tarea))).
 
@@ -91,4 +92,4 @@ tareaCompleja(Tarea):-
     Longitud > 2.
 
 % Punto 6:
-herramientasRequeridas(ordenarCuarto, [escoba, trapeador, plumero]).
+
